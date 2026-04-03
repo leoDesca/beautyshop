@@ -282,14 +282,17 @@ def seed_data():
 
 
 # ── Start ─────────────────────────────────────────────────────────────────────
-# ── Start ─────────────────────────────────────────────────────────────────────
 
-@app.before_request
-def initialize():
-    if not getattr(app, '_db_initialized', False):
-        db.create_all()
-        seed_data()
-        app._db_initialized = True
+# ── Initialize Database & Seed ─────────────────────────────
+def initialize_database():
+    """Create tables and seed data if not exists."""
+    print("Connecting to database:", DATABASE_URL)
+    db.create_all()  # Creates tables if they don't exist
+    seed_data()      # Adds default products and admin user
+
+# Run once when app starts
+with app.app_context():
+    initialize_database()
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
