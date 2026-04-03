@@ -282,10 +282,16 @@ def seed_data():
 
 
 # ── Start ─────────────────────────────────────────────────────────────────────
-with app.app_context():
-    db.create_all()
-    seed_data()
+# ── Start ─────────────────────────────────────────────────────────────────────
+
+@app.before_request
+def initialize():
+    if not getattr(app, '_db_initialized', False):
+        db.create_all()
+        seed_data()
+        app._db_initialized = True
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=False)
+
