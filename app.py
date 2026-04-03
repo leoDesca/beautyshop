@@ -9,7 +9,10 @@ app.secret_key = os.environ.get("SECRET_KEY", "dev-secret-key")
 # ── Database Configuration ───────────────────────────────────────────────────
 DATABASE_URL = os.environ.get("DATABASE_URL", "sqlite:///beautyshop.db")
 if DATABASE_URL.startswith("postgres://"):
-    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql+pg8000://", 1)
+elif DATABASE_URL.startswith("postgresql://"):
+    DATABASE_URL = DATABASE_URL.replace("postgresql://", "postgresql+pg8000://", 1)
+
 
 app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URL
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
@@ -284,17 +287,15 @@ def seed_data():
 # ── Start ─────────────────────────────────────────────────────────────────────
 
 # ── Initialize Database & Seed ─────────────────────────────
-def initialize_database():
-    """Create tables and seed data if not exists."""
-    print("Connecting to database:", DATABASE_URL)
-    db.create_all()  # Creates tables if they don't exist
-    seed_data()      # Adds default products and admin user
-
-# Run once when app starts
-with app.app_context():
-    initialize_database()
+@app.before_request
+def initialize():
+    if not getattr(app, '_db_initialized', False):
+        db.create_all()
+        seed_data()
+        app._db_initialized = True
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=False)
+
 
