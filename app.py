@@ -9,10 +9,7 @@ app.secret_key = os.environ.get("SECRET_KEY", "dev-secret-key")
 # ── Database Configuration ───────────────────────────────────────────────────
 DATABASE_URL = os.environ.get("DATABASE_URL", "sqlite:///beautyshop.db")
 if DATABASE_URL.startswith("postgres://"):
-    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql+pg8000://", 1)
-elif DATABASE_URL.startswith("postgresql://"):
-    DATABASE_URL = DATABASE_URL.replace("postgresql://", "postgresql+pg8000://", 1)
-
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URL
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
@@ -286,16 +283,10 @@ def seed_data():
 
 # ── Start ─────────────────────────────────────────────────────────────────────
 
-# ── Initialize Database & Seed ─────────────────────────────
-@app.before_request
-def initialize():
-    if not getattr(app, '_db_initialized', False):
-        db.create_all()
-        seed_data()
-        app._db_initialized = True
+with app.app_context():
+    db.create_all()
+    seed_data()
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=False)
-
-
