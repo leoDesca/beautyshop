@@ -282,7 +282,7 @@ def seed_data():
 
 
 # ── Start ─────────────────────────────────────────────────────────────────────
-
+db = SQLAlchemy(app)
 with app.app_context():
     db.create_all()
     seed_data()
