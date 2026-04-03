@@ -9,9 +9,7 @@ app.secret_key = os.environ.get("SECRET_KEY", "dev-secret-key")
 # ── Database Configuration ───────────────────────────────────────────────────
 DATABASE_URL = os.environ.get("DATABASE_URL", "sqlite:///beautyshop.db")
 if DATABASE_URL.startswith("postgres://"):
-    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql+pg8000://", 1)
-elif DATABASE_URL.startswith("postgresql://") and "+pg8000" not in DATABASE_URL:
-    DATABASE_URL = DATABASE_URL.replace("postgresql://", "postgresql+pg8000://", 1)
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URL
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
