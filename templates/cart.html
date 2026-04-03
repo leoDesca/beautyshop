@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Your Cart – Lumière Beauty{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <h1>Your Cart 🛒</h1>
+</div>
+
+<div class="cart-container">
+  {% if cart_items %}
+  <table class="cart-table">
+    <thead>
+      <tr>
+        <th>Product</th>
+        <th>Price</th>
+        <th>Qty</th>
+        <th>Subtotal</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in cart_items %}
+      <tr>
+        <td class="cart-name">{{ item.product.name }}</td>
+        <td>UGX {{ "{:,.0f}".format(item.product.price * 3800) }}</td>
+        <td>
+          <form action="{{ url_for('update_cart', product_id=item.product.id) }}" method="POST" class="qty-form">
+            <input type="number" name="quantity" value="{{ item.quantity }}" min="0" max="99" class="qty-input"/>
+            <button type="submit" class="btn btn-xs">Update</button>
+          </form>
+        </td>
+        <td>UGX {{ "{:,.0f}".format(item.subtotal * 3800) }}</td>
+        <td><a href="{{ url_for('remove_from_cart', product_id=item.product.id) }}" class="remove-btn">✕</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="cart-summary">
+    <div class="cart-total">
+      Total: <strong>UGX {{ "{:,.0f}".format(total * 3800) }}</strong>
+    </div>
+    <div class="cart-actions">
+      <a href="{{ url_for('index') }}" class="btn btn-outline">Continue Shopping</a>
+      <form action="{{ url_for('checkout') }}" method="POST">
+        <button type="submit" class="btn btn-primary">Checkout</button>
+      </form>
+    </div>
+  </div>
+
+  {% else %}
+  <div class="empty-cart">
+    <p>Your cart is empty 💔</p>
+    <a href="{{ url_for('index') }}" class="btn btn-primary">Start Shopping</a>
+  </div>
+  {% endif %}
+</div>
+
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Sign Up – Lumière Beauty{% endblock %}
+{% block content %}
+
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-logo">🌸</div>
+    <h2>Create Account</h2>
+    <p class="auth-sub">Join Lumière Beauty today</p>
+
+    <form action="{{ url_for('register') }}" method="POST" class="auth-form">
+      <div class="form-group">
+        <label>Username</label>
+        <input type="text" name="username" required placeholder="Choose a username"/>
+      </div>
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" name="email" required placeholder="you@example.com"/>
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" name="password" required placeholder="Create a password"/>
+      </div>
+      <div class="form-group">
+        <label>Confirm Password</label>
+        <input type="password" name="confirm_password" required placeholder="Repeat your password"/>
+      </div>
+      <button type="submit" class="btn btn-primary btn-full">Create Account</button>
+    </form>
+
+    <p class="auth-switch">Already have an account? <a href="{{ url_for('login') }}">Sign In</a></p>
+  </div>
+</div>
+
+{% endblock %}

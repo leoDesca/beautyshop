@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard – Lumière Beauty{% endblock %}
+{% block content %}
+
+<div class="admin-header">
+  <h1>Admin Dashboard 💼</h1>
+  <div class="admin-actions">
+    <a href="{{ url_for('index') }}" class="btn btn-outline">← View Shop</a>
+    <a href="{{ url_for('admin_add_product') }}" class="btn btn-primary">+ Add Product</a>
+  </div>
+</div>
+
+<div class="admin-container">
+  <div class="admin-stats">
+    <div class="stat-card">
+      <span class="stat-num">{{ products|selectattr('category','eq','lip')|list|length }}</span>
+      <span class="stat-label">Lip Products</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-num">{{ products|selectattr('category','eq','hair')|list|length }}</span>
+      <span class="stat-label">Hair Products</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-num">{{ products|length }}</span>
+      <span class="stat-label">Total Products</span>
+    </div>
+  </div>
+
+  <table class="admin-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th>Category</th>
+        <th>Price (UGX)</th>
+        <th>In Stock</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for product in products %}
+      <tr>
+        <td>{{ product.id }}</td>
+        <td>{{ product.name }}</td>
+        <td><span class="tag tag-{{ product.category }}">{{ product.category|capitalize }}</span></td>
+        <td>{{ "{:,.0f}".format(product.price * 3800) }}</td>
+        <td>
+          {% if product.in_stock %}
+            <span class="badge badge-green">Yes</span>
+          {% else %}
+            <span class="badge badge-red">No</span>
+          {% endif %}
+        </td>
+        <td class="row-actions">
+          <a href="{{ url_for('admin_edit_product', product_id=product.id) }}" class="btn btn-xs btn-outline">Edit</a>
+          <form action="{{ url_for('admin_delete_product', product_id=product.id) }}" method="POST" style="display:inline" onsubmit="return confirm('Delete this product?')">
+            <button type="submit" class="btn btn-xs btn-danger">Delete</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

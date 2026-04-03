@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}{{ action }} Product – Lumière Beauty{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <h1>{{ action }} Product</h1>
+  <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline">← Back</a>
+</div>
+
+<div class="form-container">
+  <form action="" method="POST" class="product-form">
+    <div class="form-row">
+      <div class="form-group">
+        <label>Product Name *</label>
+        <input type="text" name="name" required placeholder="e.g. Velvet Rose Lipstick"
+               value="{{ product.name if product else '' }}"/>
+      </div>
+      <div class="form-group">
+        <label>Category *</label>
+        <select name="category" required>
+          <option value="">-- Select --</option>
+          <option value="lip" {% if product and product.category == 'lip' %}selected{% endif %}>Lip</option>
+          <option value="hair" {% if product and product.category == 'hair' %}selected{% endif %}>Hair</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Description *</label>
+      <textarea name="description" required rows="3" placeholder="Describe the product...">{{ product.description if product else '' }}</textarea>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Price (USD) *</label>
+        <input type="number" name="price" required step="0.01" min="0"
+               value="{{ product.price if product else '' }}"/>
+      </div>
+      <div class="form-group">
+        <label>Image URL</label>
+        <input type="url" name="image_url" placeholder="https://..."
+               value="{{ product.image_url if product else '' }}"/>
+      </div>
+    </div>
+    <div class="form-group form-check">
+      <label>
+        <input type="checkbox" name="in_stock" {% if not product or product.in_stock %}checked{% endif %}/>
+        In Stock
+      </label>
+    </div>
+    <div class="form-actions">
+      <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline">Cancel</a>
+      <button type="submit" class="btn btn-primary">{{ action }} Product</button>
+    </div>
+  </form>
+</div>
+
+{% endblock %}

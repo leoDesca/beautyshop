@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block title %}Lumière Beauty – Lip & Hair Products{% endblock %}
+{% block content %}
+
+<header class="hero">
+  <div class="hero-inner">
+    <p class="hero-eyebrow">curated for you</p>
+    <h1>Beauty That<br/><em>Speaks</em></h1>
+    <p class="hero-desc">Premium lip and hair products for every look, every mood.</p>
+    <div class="hero-cta">
+      <a href="#lip" class="btn btn-primary">Shop Lip</a>
+      <a href="#hair" class="btn btn-outline">Shop Hair</a>
+    </div>
+  </div>
+  <div class="hero-deco">💋</div>
+</header>
+
+<!-- Lip Products -->
+<section class="section" id="lip">
+  <div class="section-header">
+    <h2>Lip Products</h2>
+    <p>Bold, nourishing, unforgettable</p>
+  </div>
+  <div class="product-grid">
+    {% for product in lip_products %}
+    <div class="product-card">
+      {% if product.image_url %}
+      <div class="product-img">
+        <img src="{{ product.image_url }}" alt="{{ product.name }}" loading="lazy"/>
+      </div>
+      {% endif %}
+      <div class="product-info">
+        <span class="product-cat">Lip</span>
+        <h3>{{ product.name }}</h3>
+        <p>{{ product.description[:80] }}{% if product.description|length > 80 %}…{% endif %}</p>
+        <div class="product-footer">
+          <span class="price">UGX {{ "{:,.0f}".format(product.price * 3800) }}</span>
+          <form action="{{ url_for('add_to_cart', product_id=product.id) }}" method="POST">
+            <button type="submit" class="btn btn-sm">Add to Cart</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    {% else %}
+    <p class="empty-msg">No lip products available yet.</p>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- Hair Products -->
+<section class="section section-alt" id="hair">
+  <div class="section-header">
+    <h2>Hair Products</h2>
+    <p>Nourish, define, and shine</p>
+  </div>
+  <div class="product-grid">
+    {% for product in hair_products %}
+    <div class="product-card">
+      {% if product.image_url %}
+      <div class="product-img">
+        <img src="{{ product.image_url }}" alt="{{ product.name }}" loading="lazy"/>
+      </div>
+      {% endif %}
+      <div class="product-info">
+        <span class="product-cat hair">Hair</span>
+        <h3>{{ product.name }}</h3>
+        <p>{{ product.description[:80] }}{% if product.description|length > 80 %}…{% endif %}</p>
+        <div class="product-footer">
+          <span class="price">UGX {{ "{:,.0f}".format(product.price * 3800) }}</span>
+          <form action="{{ url_for('add_to_cart', product_id=product.id) }}" method="POST">
+            <button type="submit" class="btn btn-sm">Add to Cart</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    {% else %}
+    <p class="empty-msg">No hair products available yet.</p>
+    {% endfor %}
+  </div>
+</section>
+
+{% endblock %}
